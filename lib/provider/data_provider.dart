@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:ejemplo_app/data/dbase.dart';
+import 'package:ejemplo_app/data/product_data.dart';
 import 'package:ejemplo_app/models/plato_model.dart';
 
 class DataProvider {
+  ProductData pd = new ProductData();
   static final StreamController<List<PlatoModel>> _streamController =
       new StreamController.broadcast();
 
@@ -11,8 +13,7 @@ class DataProvider {
       _streamController.stream;
 
   static void obtienePlatosProvider() async {
-    final db = new Dbase();
-    final lista = await db.obtienePlatos();
+    final lista = await pd.obtienePlatos();
     _streamController.add(lista);
   }
 

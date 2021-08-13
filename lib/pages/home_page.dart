@@ -10,25 +10,36 @@ class HomePage extends StatelessWidget {
         title: Text('Lista'),
         actions: [
           IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, 'mantenimiento');
-              },
-              icon: Icon(Icons.add))
+            onPressed: () {
+              Navigator.pushNamed(context, 'mantenimiento');
+            },
+            icon: Icon(Icons.add),
+          )
         ],
       ),
       body: StreamBuilder(
-          stream: DataProvider.streamController,
-          // initialData: initialData,
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (!snapshot.hasData) return Container();
+        stream: DataProvider.streamController,
+        // initialData: initialData,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (!snapshot.hasData) return Container();
 
-            final List<PlatoModel> lista = snapshot.data;
-            return ListView.builder(
-                itemCount: lista.length,
-                itemBuilder: (_, int index) {
-                  return ListTile(leading: Text(lista[index].descripcion));
-                });
-          }),
+          final List<PlatoModel> lista = snapshot.data;
+          return ListView.builder(
+            itemCount: lista.length,
+            itemBuilder: (_, int index) {
+              return Dismissible(
+                key: Key('${lista[index].descripcion}-prodDis'),
+                onDismissed: (DismissDirection direction){
+                  
+                },
+                child: ListTile(
+                  leading: Text(lista[index].descripcion),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

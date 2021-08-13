@@ -1,4 +1,5 @@
 import 'package:ejemplo_app/data/dbase.dart';
+import 'package:ejemplo_app/data/product_data.dart';
 import 'package:ejemplo_app/models/plato_model.dart';
 import 'package:ejemplo_app/provider/data_provider.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ class MantenimientoPage extends StatefulWidget {
 
 class _MantenimientoPageState extends State<MantenimientoPage> {
   final db = new Dbase();
+  final pd = new ProductData();
 
   final _codigoController = new TextEditingController();
   final _descripcionController = new TextEditingController();
@@ -63,8 +65,8 @@ class _MantenimientoPageState extends State<MantenimientoPage> {
                     codigo: _codigoController.text,
                     descripcion: _descripcionController.text,
                     precio: double.parse(_precioController.text));
-                db.agregaPlato(plato);
-                DataProvider.obtienePlatosProvider();
+                pd.agregaPlato(plato);
+                .obtienePlatosProvider();
                 Navigator.pop(context);
               },
               color: Colors.black87),
