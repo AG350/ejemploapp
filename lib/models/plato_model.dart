@@ -13,6 +13,7 @@ class PlatoModel {
   PlatoModel({
     this.id,
     required this.codigo,
+    required this.nombre,
     required this.descripcion,
     this.imagen,
     required this.precio,
@@ -20,6 +21,7 @@ class PlatoModel {
 
   int? id;
   String codigo;
+  String nombre;
   String descripcion;
   String? imagen;
   double precio;
@@ -27,6 +29,7 @@ class PlatoModel {
   factory PlatoModel.fromJson(Map<String, dynamic> json) => PlatoModel(
         id: json["id"],
         codigo: json["codigo"],
+        nombre: json["nombre"],
         descripcion: json["descripcion"],
         imagen: json["imagen"],
         precio: json["Precio"].toDouble(),
@@ -35,8 +38,9 @@ class PlatoModel {
   Map<String, dynamic> toJson() => {
         "id": id,
         "codigo": codigo,
+        "nombre": nombre,
         "descripcion": descripcion,
-        "imagen": descripcion,
+        "imagen": imagen,
         "Precio": precio,
       };
 }

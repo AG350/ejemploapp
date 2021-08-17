@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ejemplo_app/data/dbase.dart';
 import 'package:ejemplo_app/models/plato_model.dart';
 import 'package:ejemplo_app/pages/search/search_plato.dart';
@@ -10,6 +12,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  PlatoModel? platoSeleccionado;
+  List<PlatoModel> historial = [];
+  @override
+  void initState() {
+    DataProvider.obtienePlatosProvider(null);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,30 +27,42 @@ class _HomePageState extends State<HomePage> {
         title: Text('Lista'),
         actions: [
           IconButton(
-            onPressed: () {
-              showSearch(context: context, delegate: SearchPlato());
+            onPressed: () async {
+              final plato = await showSearch(
+                  context: context,
+                  delegate: SearchPlato('Buscar plato..', historial));
+              setState(() {
+                if (plato != null) {
+                  this.platoSeleccionado = plato;
+                  this.historial.insert(0, plato);
+                }
+              });
             },
             icon: Icon(Icons.search),
           )
         ],
       ),
-      body: StreamBuilder(
-        stream: DataProvider.streamController,
-        // initialData: initialData,
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (!snapshot.hasData) return Container();
+      body: Padding(
+        padding: const EdgeInsets.all(15),
+        child: StreamBuilder(
+          stream: DataProvider.streamController,
+          // initialData: initialData,
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (!snapshot.hasData) return Container();
 
-          final List<PlatoModel> lista = snapshot.data;
-          return ListView.builder(
-            itemCount: lista.length,
-            itemBuilder: (_, int index) {
-              return ItemProducto(
-                plato: lista[index],
-                index: index,
-              );
-            },
-          );
-        },
+            final List<PlatoModel> lista = snapshot.data;
+            return ListView.builder(
+              itemCount: lista.length,
+              itemBuilder: (_, int index) {
+                print('aca ${lista[index].imagen}');
+                return ItemProducto(
+                  plato: lista[index],
+                  index: index,
+                );
+              },
+            );
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.pushNamed(context, 'mantenimiento'),
@@ -104,13 +126,53 @@ class ItemProducto extends StatelessWidget {
           ),
         );
       },
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundImage: AssetImage(
-              "assets/no-image.png"), // no matter how big it is, it won't overflow
+      child: Card(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: BorderSide(color: Colors.black, width: 2)),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              children: [_buildImage(plato), _buildText(context, plato)],
+            ),
+          ),
         ),
-        title: Text(plato.descripcion),
       ),
     );
   }
+
+  /*
+  ListTile(
+          title: Text(plato.descripcion),
+          subtitle: Text('${plato.precio}'),
+          onTap: () => print(plato.descripcion),
+        ),
+   */
+  Widget _buildImage(PlatoModel plato) => Image.file(
+        File(plato.imagen!),
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: 120,
+      );
+  Widget _buildText(BuildContext context, PlatoModel palto) => ExpansionTile(
+        childrenPadding: EdgeInsets.all(16),
+        expandedCrossAxisAlignment: CrossAxisAlignment.start,
+        title: Text(
+          '${plato.nombre}',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
+        children: [
+          Text(
+            'Precio:  \$${plato.precio}',
+            style: TextStyle(
+                fontSize: 22, height: 1.4, fontWeight: FontWeight.w500),
+          ),
+          Text(
+            'Descripcion:  ${plato.descripcion}',
+            style: TextStyle(fontSize: 18, height: 1.4),
+          ),
+        ],
+      );
 }

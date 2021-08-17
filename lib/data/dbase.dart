@@ -35,6 +35,7 @@ class Dbase {
         await db.execute('''CREATE TABLE Platos (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             codigo TEXT,
+            nombre TEXT, 
             descripcion TEXT, 
             imagen TEXT, 
             Precio Double
@@ -85,7 +86,7 @@ class Dbase {
   }
 
   Future<PlatoModel> leePlatoByCodigo(String codigo) async {
-    PlatoModel plato = new PlatoModel(codigo: '', descripcion: '', precio: 0.0);
+    PlatoModel plato = new PlatoModel(codigo: '', nombre: '',descripcion: '', precio: 0.0);
     try {
       final db = await database;
       final res =
@@ -95,6 +96,26 @@ class Dbase {
       print(errorsql.toString());
     } finally {}
     return plato;
+  }
+  Future<List<PlatoModel>> leePlatoByTermino(String termino) async {
+    List<PlatoModel> lstPlatos = [];
+    try {
+      final db = await database;
+      final res =
+          await db.rawQuery('''
+            SELECT * FROM Platos as p
+            WHERE p.codigo LIKE \'%$termino%\'
+            OR p.nombre LIKE \'%$termino%\'
+            OR p.descripcion LIKE \'%$termino%\'
+            OR p.id LIKE \'%$termino%\'
+          ''');
+      lstPlatos = (res.isNotEmpty)
+          ? res.map((item) => PlatoModel.fromJson(item)).toList()
+          : [];
+    } catch (errorsql) {
+      print(errorsql.toString());
+    } finally {}
+    return lstPlatos;
   }
 
   Future<List<PlatoModel>> obtienePlatos() async {

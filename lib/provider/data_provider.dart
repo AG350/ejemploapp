@@ -9,13 +9,37 @@ class DataProvider {
   static final StreamController<UsuarioModel> _userStreamController =
       new StreamController.broadcast();
 
+  static final StreamController<int> _carCounterStreamController =
+      new StreamController.broadcast();
+
+  static final List<PlatoModel> carritoTemporal = [];
+
+  /*Carrito*/
+
+  Stream<int> get carCounterStreamController =>
+      _carCounterStreamController.stream;
+
   /*Plato*/
   static Stream<List<PlatoModel>> get streamController =>
       _streamController.stream;
 
-  static void obtienePlatosProvider() async {
+  static void obtienePlatosProvider(PlatoModel? platoSelecciondo) async {
+    if (platoSelecciondo != null) {
+      final lista = [platoSelecciondo];
+      _streamController.add(lista);
+      return;
+    } else {
+      final db = new Dbase();
+      final lista = await db.obtienePlatos();
+      print(lista[0].imagen);
+      _streamController.add(lista);
+      return;
+    }
+  }
+
+  static void searchPlatosProvider(String termino) async {
     final db = new Dbase();
-    final lista = await db.obtienePlatos();
+    final lista = await db.leePlatoByTermino(termino);
     _streamController.add(lista);
   }
 
@@ -39,5 +63,6 @@ class DataProvider {
   static dispose() {
     _streamController.close();
     _userStreamController.close();
+    _carCounterStreamController.close();
   }
 }
