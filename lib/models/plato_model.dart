@@ -11,24 +11,32 @@ String platoModelToJson(PlatoModel data) => json.encode(data.toJson());
 
 class PlatoModel {
   PlatoModel({
+    this.id,
     required this.codigo,
     required this.descripcion,
+    this.imagen,
     required this.precio,
   });
 
+  int? id;
   String codigo;
   String descripcion;
+  String? imagen;
   double precio;
 
   factory PlatoModel.fromJson(Map<String, dynamic> json) => PlatoModel(
-        codigo: json["Codigo"],
-        descripcion: json["Descripcion"],
+        id: json["id"],
+        codigo: json["codigo"],
+        descripcion: json["descripcion"],
+        imagen: json["imagen"],
         precio: json["Precio"].toDouble(),
       );
 
   Map<String, dynamic> toJson() => {
-        "Codigo": codigo,
-        "Descripcion": descripcion,
+        "id": id,
+        "codigo": codigo,
+        "descripcion": descripcion,
+        "imagen": descripcion,
         "Precio": precio,
       };
 }

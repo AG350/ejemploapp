@@ -1,5 +1,4 @@
-import 'package:ejemplo_app/pages/home_page.dart';
-import 'package:ejemplo_app/pages/matenimiento_page.dart';
+import 'package:ejemplo_app/pages/pages.dart';
 import 'package:ejemplo_app/provider/data_provider.dart';
 import 'package:flutter/material.dart';
 
@@ -11,11 +10,14 @@ class MyApp extends StatelessWidget {
     DataProvider.obtienePlatosProvider();
     return MaterialApp(
       title: 'Material App',
-      initialRoute: 'home',
+      initialRoute: 'landing',
       debugShowCheckedModeBanner: false,
       routes: {
         'home': (_) => HomePage(),
-        'mantenimiento': (_) => MantenimientoPage()
+        'mantenimiento': (_) => MantenimientoPage(),
+        'signin': (_) => SigninPage(),
+        'signup': (_) => SignupPage(),
+        'landing': (_) => LandingPage(),
       },
     );
   }
