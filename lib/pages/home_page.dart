@@ -173,6 +173,16 @@ class ItemProducto extends StatelessWidget {
             'Descripcion:  ${plato.descripcion}',
             style: TextStyle(fontSize: 18, height: 1.4),
           ),
+          BottomNavigationBar(
+            items: [
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.shopping_cart_outlined), label: 'Agregar'),
+              BottomNavigationBarItem(icon: Icon(Icons.clear), label: 'Volver'),
+            ],
+            elevation: 0,
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
+          )
         ],
       );
 }
