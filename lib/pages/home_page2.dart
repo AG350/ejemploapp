@@ -7,17 +7,18 @@ import 'package:ejemplo_app/utils/navigation_util.dart';
 import 'package:ejemplo_app/widgets/menu_widget.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatefulWidget {
+Stream<List<PlatoModel>> _cartStream = DataProvider().carroStream();
+PlatoModel? platoSeleccionado2;
+List<PlatoModel> historial = [];
+List<PlatoModel> _carro = [];
+
+class HomePage2 extends StatefulWidget {
   static final String routeName = 'home';
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomePage2State createState() => _HomePage2State();
 }
 
-class _HomePageState extends State<HomePage> {
-  Stream<List<PlatoModel>> _cartStream = DataProvider().carroStream();
-  PlatoModel? platoSeleccionado;
-  List<PlatoModel> historial = [];
-  List<PlatoModel> _carro = [];
+class _HomePage2State extends State<HomePage2> {
   @override
   void initState() {
     DataProvider.obtienePlatosProvider(null);
@@ -32,64 +33,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Lista'),
-        actions: [
-          IconButton(
-            onPressed: () async {
-              final plato = await showSearch(
-                context: context,
-                delegate: SearchPlato('Buscar plato..', historial),
-              );
-              setState(
-                () {
-                  if (plato != null) {
-                    platoSeleccionado = plato;
-                    historial.insert(0, plato);
-                  }
-                },
-              );
-            },
-            icon: Icon(Icons.search),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0, top: 8.0),
-            child: GestureDetector(
-              child: Stack(
-                alignment: Alignment.topCenter,
-                children: <Widget>[
-                  Icon(
-                    Icons.shopping_cart,
-                    size: 36.0,
-                  ),
-                  if (_carro.length > 0)
-                    Padding(
-                      padding: const EdgeInsets.only(left: 2.0),
-                      child: CircleAvatar(
-                        radius: 8.0,
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
-                        child: Text(
-                          '${_carro.length}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-              onTap: () {
-                setState(() {});
-                if (_carro.isNotEmpty)
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => CartPage(),
-                    ),
-                  );
-              },
-            ),
-          )
-        ],
+        centerTitle: true,
       ),
       drawer: MenuWidget(),
       body: Padding(

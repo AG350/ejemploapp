@@ -10,10 +10,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Material App',
       navigatorKey: NavigationService.instance.navigationKey,
-      initialRoute: 'landing',
+      initialRoute: 'home2',
       debugShowCheckedModeBanner: false,
       routes: {
         'home': (_) => HomePage(),
+        'home2': (_) => HomePage2(),
         'mantenimiento': (_) => MantenimientoPage(),
         'signin': (_) => SigninPage(),
         'signup': (_) => SignupPage(),
