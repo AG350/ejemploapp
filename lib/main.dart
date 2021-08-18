@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
         'signin': (_) => SigninPage(),
         'signup': (_) => SignupPage(),
         'landing': (_) => LandingPage(),
+        'cart': (_) => CartPage(),
       },
     );
   }

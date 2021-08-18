@@ -1,26 +1,29 @@
 import 'dart:io';
-import 'package:ejemplo_app/models/plato_model.dart';
+import 'package:ejemplo_app/models/models.dart';
 import 'package:ejemplo_app/pages/pages.dart';
 import 'package:ejemplo_app/pages/search/search_plato.dart';
 import 'package:ejemplo_app/provider/data_provider.dart';
 import 'package:ejemplo_app/utils/navigation_util.dart';
+import 'package:ejemplo_app/widgets/menu_widget.dart';
 import 'package:flutter/material.dart';
 
+Stream<List<PlatoModel>> _cartStream = DataProvider().carroStream();
+PlatoModel? platoSeleccionado;
+List<PlatoModel> historial = [];
+List<PlatoModel> _carro = [];
+
 class HomePage extends StatefulWidget {
+  static final String routeName = 'home';
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  List<PlatoModel> _cartList = DataProvider.carritoTemporal;
-  int cartLen = DataProvider.carritoTemporal.length;
-  PlatoModel? platoSeleccionado;
-  List<PlatoModel> historial = [];
   @override
   void initState() {
     DataProvider.obtienePlatosProvider(null);
-    DataProvider.carCounterStreamController.listen((event) {
-      cartLen = event;
+    _cartStream.listen((carro) {
+      _carro = carro;
     });
     super.initState();
   }
@@ -34,14 +37,17 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             onPressed: () async {
               final plato = await showSearch(
-                  context: context,
-                  delegate: SearchPlato('Buscar plato..', historial));
-              setState(() {
-                if (plato != null) {
-                  this.platoSeleccionado = plato;
-                  this.historial.insert(0, plato);
-                }
-              });
+                context: context,
+                delegate: SearchPlato('Buscar plato..', historial),
+              );
+              setState(
+                () {
+                  if (plato != null) {
+                    platoSeleccionado = plato;
+                    historial.insert(0, plato);
+                  }
+                },
+              );
             },
             icon: Icon(Icons.search),
           ),
@@ -55,7 +61,7 @@ class _HomePageState extends State<HomePage> {
                     Icons.shopping_cart,
                     size: 36.0,
                   ),
-                  if (_cartList.length > 0)
+                  if (_carro.length > 0)
                     Padding(
                       padding: const EdgeInsets.only(left: 2.0),
                       child: CircleAvatar(
@@ -63,7 +69,7 @@ class _HomePageState extends State<HomePage> {
                         backgroundColor: Colors.red,
                         foregroundColor: Colors.white,
                         child: Text(
-                          '$cartLen',
+                          '${_carro.length}',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 12.0,
@@ -74,10 +80,11 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               onTap: () {
-                if (_cartList.isNotEmpty)
+                setState(() {});
+                if (_carro.isNotEmpty)
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => CartPage(_cartList),
+                      builder: (context) => CartPage(),
                     ),
                   );
               },
@@ -85,6 +92,7 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
+      drawer: MenuWidget(),
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: StreamBuilder(
@@ -97,9 +105,6 @@ class _HomePageState extends State<HomePage> {
             return ListView.builder(
               itemCount: lista.length,
               itemBuilder: (_, int index) {
-                DataProvider.carCounterStreamController.listen((event) {
-                  cartLen = event;
-                });
                 return Dismissible(
                   key: Key('${lista[index].codigo}-prodDis'),
                   direction: DismissDirection.endToStart,
@@ -207,16 +212,13 @@ class _HomePageState extends State<HomePage> {
             showUnselectedLabels: false,
             onTap: (int index) {
               if (index == 0) {
-                DataProvider.agregarItemCarrito(plato);
                 setState(() {
-                  DataProvider.carCounterStreamController.listen((event) {
-                    cartLen = event;
-                  });
+                  DataProvider.agregarItemCarrito(plato);
                 });
+
                 return;
               }
               NavigationService.instance.navigateToReplacement("home");
-              return;
             },
           )
         ],

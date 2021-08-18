@@ -4,27 +4,25 @@ import 'package:ejemplo_app/data/dbase.dart';
 import 'package:ejemplo_app/models/models.dart';
 
 class DataProvider {
-  
-
   static final StreamController<List<PlatoModel>> _streamController =
       new StreamController.broadcast();
   static final StreamController<UsuarioModel> _userStreamController =
       new StreamController.broadcast();
 
-  static final StreamController<int> _carCounterStreamController =
+  static final StreamController<List<PlatoModel>> _cartStreamController =
       new StreamController.broadcast();
 
   static final List<PlatoModel> carritoTemporal = [];
 
   /*Carrito*/
 
-  static Stream<int> get carCounterStreamController =>
-      _carCounterStreamController.stream;
+  Stream<List<PlatoModel>> carroStream() =>
+      _cartStreamController.stream.asBroadcastStream();
 
   static void agregarItemCarrito(PlatoModel plato) async {
+    print(plato.nombre);
     carritoTemporal.add(plato);
-    print('a');
-    _carCounterStreamController.add(carritoTemporal.length);
+    _cartStreamController.add(carritoTemporal);
   }
 
   /*Plato*/
@@ -65,13 +63,13 @@ class DataProvider {
   static void obtienerUsuario(String email, String pass) async {
     final db = new Dbase();
     final UsuarioModel usuario = await db.obtenerUsuario(email, pass);
-    
+
     _userStreamController.add(usuario);
   }
 
   static dispose() {
     _streamController.close();
     _userStreamController.close();
-    _carCounterStreamController.close();
+    _cartStreamController.close();
   }
 }
