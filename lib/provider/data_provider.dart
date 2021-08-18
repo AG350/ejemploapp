@@ -4,6 +4,8 @@ import 'package:ejemplo_app/data/dbase.dart';
 import 'package:ejemplo_app/models/models.dart';
 
 class DataProvider {
+  
+
   static final StreamController<List<PlatoModel>> _streamController =
       new StreamController.broadcast();
   static final StreamController<UsuarioModel> _userStreamController =
@@ -16,8 +18,14 @@ class DataProvider {
 
   /*Carrito*/
 
-  Stream<int> get carCounterStreamController =>
+  static Stream<int> get carCounterStreamController =>
       _carCounterStreamController.stream;
+
+  static void agregarItemCarrito(PlatoModel plato) async {
+    carritoTemporal.add(plato);
+    print('a');
+    _carCounterStreamController.add(carritoTemporal.length);
+  }
 
   /*Plato*/
   static Stream<List<PlatoModel>> get streamController =>
@@ -57,6 +65,7 @@ class DataProvider {
   static void obtienerUsuario(String email, String pass) async {
     final db = new Dbase();
     final UsuarioModel usuario = await db.obtenerUsuario(email, pass);
+    
     _userStreamController.add(usuario);
   }
 

@@ -1,4 +1,5 @@
 import 'package:ejemplo_app/pages/pages.dart';
+import 'package:ejemplo_app/utils/navigation_util.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -8,6 +9,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Material App',
+      navigatorKey: NavigationService.instance.navigationKey,
       initialRoute: 'landing',
       debugShowCheckedModeBanner: false,
       routes: {

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:ejemplo_app/models/models.dart';
+import 'package:ejemplo_app/prefs/prefs.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -8,6 +9,7 @@ import 'package:path/path.dart';
 class Dbase {
   static Database? _database;
   static final Dbase _db = new Dbase._();
+  final pref = new Pref();
 
   Dbase._();
 
@@ -49,6 +51,7 @@ class Dbase {
       },
     );
   }
+
   // platos
   Future<bool> guardaPlato(PlatoModel plato) async {
     final _plato = await leePlatoByCodigo(plato.codigo);
@@ -86,7 +89,8 @@ class Dbase {
   }
 
   Future<PlatoModel> leePlatoByCodigo(String codigo) async {
-    PlatoModel plato = new PlatoModel(codigo: '', nombre: '',descripcion: '', precio: 0.0);
+    PlatoModel plato =
+        new PlatoModel(codigo: '', nombre: '', descripcion: '', precio: 0.0);
     try {
       final db = await database;
       final res =
@@ -97,12 +101,12 @@ class Dbase {
     } finally {}
     return plato;
   }
+
   Future<List<PlatoModel>> leePlatoByTermino(String termino) async {
     List<PlatoModel> lstPlatos = [];
     try {
       final db = await database;
-      final res =
-          await db.rawQuery('''
+      final res = await db.rawQuery('''
             SELECT * FROM Platos as p
             WHERE p.codigo LIKE \'%$termino%\'
             OR p.nombre LIKE \'%$termino%\'
@@ -143,7 +147,6 @@ class Dbase {
   --------------------------------------------------------------------------
   */
 
-
   Future<bool> guardarUsuario(UsuarioModel usuario) async {
     final _usuario = await obtenerUsuario(usuario.email, usuario.password);
     if (_usuario.email != '') {
@@ -178,16 +181,22 @@ class Dbase {
     } finally {}
     return res;
   }
-   Future<UsuarioModel> obtenerUsuario(String email, String pass) async {
-    UsuarioModel usuario = new UsuarioModel(email: '', nombre: '', password: '');
+
+  Future<UsuarioModel> obtenerUsuario(String email, String pass) async {
+    UsuarioModel usuario =
+        new UsuarioModel(email: '', nombre: '', password: '');
     try {
       final db = await database;
-      final res =
-          await db.query('Usuarios', where: 'email = ? and password = ?', whereArgs: [email, pass]);
+      final res = await db.query('Usuarios',
+          where: 'email = ? and password = ?', whereArgs: [email, pass]);
       if (res.isNotEmpty) usuario = UsuarioModel.fromMap(res.first);
+      pref.usuario = usuario.nombre;
+      print(usuario.nombre);
+      print(pref.usuario);
     } catch (errorsql) {
       print(errorsql.toString());
     } finally {}
+
     return usuario;
   }
 }
