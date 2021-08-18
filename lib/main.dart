@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  static final String title = 'Aplicacion de platos de comida';
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Material App',
+      title: title,
       navigatorKey: NavigationService.instance.navigationKey,
-      initialRoute: 'home2',
+      initialRoute: 'home',
       debugShowCheckedModeBanner: false,
       routes: {
         'home': (_) => HomePage(),

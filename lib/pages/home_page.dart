@@ -101,6 +101,8 @@ class _HomePageState extends State<HomePage> {
             if (!snapshot.hasData) return Container();
 
             final List<PlatoModel> lista = snapshot.data;
+
+            print(lista[0].imagen.toString());
             return ListView.builder(
               itemCount: lista.length,
               itemBuilder: (_, int index) {
