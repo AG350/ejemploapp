@@ -18,6 +18,7 @@ class SearchPlato extends SearchDelegate {
       ),
     ];
   }
+  
 
   @override
   Widget buildLeading(BuildContext context) {
@@ -65,8 +66,8 @@ class SearchPlato extends SearchDelegate {
         final plato = platos[i];
 
         return ListTile(
-          title: Text(plato.descripcion),
-          subtitle: Text('${plato.imagen}'),
+          title: Text(plato.nombre),
+          subtitle: Text('${plato.precio}'),
           onTap: () {
             DataProvider.obtienePlatosProvider(plato);
             this.close(context, plato);

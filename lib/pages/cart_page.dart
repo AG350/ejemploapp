@@ -52,7 +52,7 @@ class _CartPageState extends State<CartPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.pushNamed(context, 'home'),
+        onPressed: () => Navigator.pushNamed(context, 'home3'),
         child: Icon(Icons.home),
       ),
     );

@@ -9,7 +9,7 @@ import 'package:path/path.dart';
 class Dbase {
   static Database? _database;
   static final Dbase _db = new Dbase._();
-  final pref = new Pref();
+  
 
   Dbase._();
 
@@ -70,10 +70,11 @@ class Dbase {
     try {
       final db = await database;
       res = await db.update('Platos', plato.toJson(),
-          where: 'codigo = ?', whereArgs: [plato.codigo]);
+          where: 'id = ?', whereArgs: [plato.id]);
     } catch (errorsql) {
       print(errorsql.toString());
     } finally {}
+    print('bd response: $res, ${plato.id}');
     return res;
   }
 
@@ -111,7 +112,6 @@ class Dbase {
             WHERE p.codigo LIKE \'%$termino%\'
             OR p.nombre LIKE \'%$termino%\'
             OR p.descripcion LIKE \'%$termino%\'
-            OR p.id LIKE \'%$termino%\'
           ''');
       lstPlatos = (res.isNotEmpty)
           ? res.map((item) => PlatoModel.fromJson(item)).toList()
@@ -126,7 +126,7 @@ class Dbase {
     List<PlatoModel> lstPlatos = [];
     try {
       final db = await database;
-      final res = await db.query('Platos', orderBy: 'descripcion');
+      final res = await db.query('Platos', orderBy: 'nombre');
       lstPlatos = (res.isNotEmpty)
           ? res.map((item) => PlatoModel.fromJson(item)).toList()
           : [];
@@ -190,9 +190,6 @@ class Dbase {
       final res = await db.query('Usuarios',
           where: 'email = ? and password = ?', whereArgs: [email, pass]);
       if (res.isNotEmpty) usuario = UsuarioModel.fromMap(res.first);
-      pref.usuario = usuario.nombre;
-      print(usuario.nombre);
-      print(pref.usuario);
     } catch (errorsql) {
       print(errorsql.toString());
     } finally {}

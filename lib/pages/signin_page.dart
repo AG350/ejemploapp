@@ -1,13 +1,15 @@
 import 'package:ejemplo_app/data/dbase.dart';
-import 'package:ejemplo_app/provider/data_provider.dart';
+import 'package:ejemplo_app/prefs/prefs.dart';
 import 'package:flutter/material.dart';
 
 class SigninPage extends StatefulWidget {
+  final _scaffkey = GlobalKey<ScaffoldState>();
   @override
   _SigninPageState createState() => _SigninPageState();
 }
 
 class _SigninPageState extends State<SigninPage> {
+  final prefs = new PreferenciasUsuario();
   final db = new Dbase();
   final _emailController = new TextEditingController();
   final _passController = new TextEditingController();
@@ -74,10 +76,18 @@ class _SigninPageState extends State<SigninPage> {
                           final user = await db.obtenerUsuario(
                               _emailController.text, _passController.text);
                           try {
-                            if (user.email == _emailController.text) 
-                              Navigator.pushNamed(context, 'home');
-                            else
+                            if (user.email == _emailController.text &&
+                                user.email != '') {
+                              prefs.nombreUsuario = user.nombre;
+                              Navigator.pushNamed(context, 'home3');
+                            } else {
+                              SnackBar snackBar = SnackBar(
+                                  content: Text(
+                                      'No existe el usuario y/o contraseña, revisar o crear cuenta'));
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
                               throw FormatException('revisar cuenta');
+                            }
                           } catch (e) {
                             print('Error en ingreso: $e');
                           }

@@ -1,23 +1,31 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Pref {
-  static final Pref _instancia = new Pref._internal();
+class PreferenciasUsuario {
+  static final PreferenciasUsuario _instancia =
+      new PreferenciasUsuario._internal();
 
-  factory Pref() {
+  factory PreferenciasUsuario() {
     return _instancia;
   }
 
-  Pref._internal();
+  PreferenciasUsuario._internal();
 
-  SharedPreferences? _prefs;
+  late SharedPreferences _prefs;
 
-  initPref() async {
+  initPrefs() async {
     this._prefs = await SharedPreferences.getInstance();
   }
 
-  String get usuario => _prefs?.getString('userName') ?? '';
-  set usuario(String usuario) {
-    _prefs?.setString('userName', usuario);
-    print(this.usuario);  
+  // GET y SET del nombreUsuario
+  String get nombreUsuario {
+    return _prefs.getString('nombreUsuario') ?? '';
+  }
+
+  set nombreUsuario(String value) {
+    _prefs.setString('nombreUsuario', value);
+  }
+
+  logOut() {
+    _prefs.remove('nombreUsuario');
   }
 }

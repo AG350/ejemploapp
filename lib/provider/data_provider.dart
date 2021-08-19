@@ -16,7 +16,7 @@ class DataProvider {
 
   /*Carrito*/
 
-  Stream<List<PlatoModel>> carroStream() =>
+  static Stream<List<PlatoModel>> get carroStream =>
       _cartStreamController.stream.asBroadcastStream();
 
   static void agregarItemCarrito(PlatoModel plato) async {
@@ -37,7 +37,6 @@ class DataProvider {
     } else {
       final db = new Dbase();
       final lista = await db.obtienePlatos();
-      print(lista[0].imagen);
       _streamController.add(lista);
       return;
     }

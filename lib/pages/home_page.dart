@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Stream<List<PlatoModel>> _cartStream = DataProvider().carroStream();
+  Stream<List<PlatoModel>> _cartStream = DataProvider.carroStream;
   PlatoModel? platoSeleccionado;
   List<PlatoModel> historial = [];
   List<PlatoModel> _carro = [];
@@ -96,7 +96,6 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(15),
         child: StreamBuilder(
           stream: DataProvider.streamController,
-          // initialData: initialData,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (!snapshot.hasData) return Container();
 
@@ -177,12 +176,19 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildImage(PlatoModel plato) => Image.file(
-        File(plato.imagen!),
-        fit: BoxFit.cover,
-        width: double.infinity,
-        height: 120,
-      );
+  Widget _buildImage(PlatoModel plato) => plato.imagen != null
+      ? Image.file(
+          File(plato.imagen!),
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: 120,
+        )
+      : Image(
+          image: AssetImage('assets/no-image.png'),
+          height: 120,
+          width: double.infinity,
+          fit: BoxFit.contain,
+        );
   Widget _buildText(BuildContext context, PlatoModel plato) => ExpansionTile(
         childrenPadding: EdgeInsets.all(16),
         expandedCrossAxisAlignment: CrossAxisAlignment.start,
