@@ -3,7 +3,6 @@ import 'package:ejemplo_app/prefs/prefs.dart';
 import 'package:flutter/material.dart';
 
 class SigninPage extends StatefulWidget {
-  final _scaffkey = GlobalKey<ScaffoldState>();
   @override
   _SigninPageState createState() => _SigninPageState();
 }
@@ -79,7 +78,7 @@ class _SigninPageState extends State<SigninPage> {
                             if (user.email == _emailController.text &&
                                 user.email != '') {
                               prefs.nombreUsuario = user.nombre;
-                              Navigator.pushNamed(context, 'home3');
+                              Navigator.pushNamed(context, 'home');
                             } else {
                               SnackBar snackBar = SnackBar(
                                   content: Text(

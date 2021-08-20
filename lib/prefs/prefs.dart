@@ -24,6 +24,7 @@ class PreferenciasUsuario {
   set nombreUsuario(String value) {
     _prefs.setString('nombreUsuario', value);
   }
+  
 
   logOut() {
     _prefs.remove('nombreUsuario');

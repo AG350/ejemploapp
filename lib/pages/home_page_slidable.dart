@@ -1,6 +1,4 @@
-import 'dart:io';
 
-import 'package:ejemplo_app/utils/snack_bar_util.dart';
 import 'package:flutter/material.dart';
 
 import 'package:ejemplo_app/data/populate_data.dart';
@@ -8,13 +6,13 @@ import 'package:ejemplo_app/main.dart';
 import 'package:ejemplo_app/models/models.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-class HomePage2 extends StatefulWidget {
-  static final String routeName = 'home';
+class HomePageSlide extends StatefulWidget {
+  static final String routeName = 'home_slide';
   @override
-  _HomePage2State createState() => _HomePage2State();
+  _HomePageSlideState createState() => _HomePageSlideState();
 }
 
-class _HomePage2State extends State<HomePage2> {
+class _HomePageSlideState extends State<HomePageSlide> {
   List<PlatoModel> items = List.of(platos);
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -96,7 +94,7 @@ class _HomePage2State extends State<HomePage2> {
           ),
           leading: CircleAvatar(
             radius: 28,
-            backgroundImage: FileImage(File(plato.imagen.toString())),
+            backgroundImage: AssetImage('assets/no-image.png'),
           ),
           title: Text(
             plato.nombre,

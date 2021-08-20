@@ -33,6 +33,7 @@ class _CartPageState extends State<CartPage> {
               elevation: 4.0,
               child: ListTile(
                 title: Text(item.nombre),
+                subtitle: null,
                 trailing: GestureDetector(
                   child: Icon(
                     Icons.remove_circle,

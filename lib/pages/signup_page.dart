@@ -1,6 +1,5 @@
 import 'package:ejemplo_app/data/dbase.dart';
 import 'package:ejemplo_app/models/models.dart';
-import 'package:ejemplo_app/provider/data_provider.dart';
 import 'package:flutter/material.dart';
 
 class SignupPage extends StatefulWidget {
@@ -92,6 +91,10 @@ class _SignupPageState extends State<SignupPage> {
                               password: _passController.text,
                             );
                             print(db.guardarUsuario(user));
+                            SnackBar snackBar =
+                                SnackBar(content: Text('Cuenta creada.'));
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
                             Navigator.pushNamed(context, 'signin');
                           } catch (e) {
                             print('Error en crear: $e');

@@ -12,6 +12,6 @@ class LandingPage extends StatelessWidget {
     if (prefs.nombreUsuario == '') {
       return SigninPage();
     }
-    return HomePage3();
+    return HomePage();
   }
 }

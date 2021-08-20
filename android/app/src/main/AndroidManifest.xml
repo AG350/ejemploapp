@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.ejemplo_app">
+    package="com.ag350.platos">
    <application
-        android:label="ejemplo_app"
+        android:label="Platos"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

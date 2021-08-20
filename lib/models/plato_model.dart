@@ -43,4 +43,20 @@ class PlatoModel {
         "imagen": imagen,
         "Precio": precio,
       };
+  factory PlatoModel.fromMap(Map<String, dynamic> json) => PlatoModel(
+        id: json["id"],
+        codigo: json["codigo"],
+        nombre: json["nombre"],
+        descripcion: json["descripcion"],
+        imagen: json["imagen"],
+        precio: json["precio"].toDouble(),
+    );
+   Map<String, dynamic> toMap() => {
+        "id": id,
+        "codigo": codigo,
+        "nombre": nombre,
+        "descripcion": descripcion,
+        "imagen": imagen,
+        "precio": precio,
+    };
 }

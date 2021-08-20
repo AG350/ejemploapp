@@ -1,15 +1,14 @@
+
 import 'dart:io';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'package:ejemplo_app/models/models.dart';
-import 'package:ejemplo_app/prefs/prefs.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
 
 class Dbase {
   static Database? _database;
   static final Dbase _db = new Dbase._();
-  
 
   Dbase._();
 
@@ -196,4 +195,8 @@ class Dbase {
 
     return usuario;
   }
+
+  /*--------------------------------------------------------------------------------------------*/
+  /*--------------------------------------- Ventas ---------------------------------------------*/
+  /*--------------------------------------------------------------------------------------------*/
 }
