@@ -43,16 +43,6 @@ class MenuWidget extends StatelessWidget {
               title: Text('Home'),
               onTap: () => Navigator.pushNamed(context, HomePage.routeName)),
           ListTile(
-              leading: Icon(Icons.home, color: Colors.blue),
-              title: Text('Home con Slidable - test - incompleto'),
-              onTap: () =>
-                  Navigator.pushNamed(context, HomePageSlide.routeName)),
-          ListTile(
-              leading: Icon(Icons.home, color: Colors.blue),
-              title: Text('Home con ExpansionTile - test'),
-              onTap: () =>
-                  Navigator.pushNamed(context, HomePageAlternative.routeName)),
-          ListTile(
               leading: Icon(Icons.add_box_sharp, color: Colors.blue),
               title: Text('Cargar productos para prueba'),
               onTap: () {
@@ -60,7 +50,7 @@ class MenuWidget extends StatelessWidget {
                   Dbase().agregaPlato(element);
                 });
                 Navigator.pushReplacementNamed(
-                    context, HomePageSlide.routeName);
+                    context, HomePage.routeName);
               }),
           ListTile(
               leading: Icon(Icons.settings, color: Colors.blue),

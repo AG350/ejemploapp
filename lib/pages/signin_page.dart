@@ -31,17 +31,15 @@ class _SigninPageState extends State<SigninPage> {
             children: [
               Container(
                 child: Form(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   child: Column(
                     children: [
-                      TextFormField(
-                        autocorrect: false,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration(
-                          hintText: 'john.doe@gmail.com',
-                          labelText: 'Correo electrónico',
-                          prefixIcon: Icon(Icons.alternate_email_rounded),
-                        ),
-                        controller: _emailController,
+                      LoginField(
+                        label: 'Correo',
+                        // declare the validator here...
+                        // valiator: (fieldContent) => fieldContent.isEmpty? 'Ce champ est obligatoire.': null
+                        // or use your custom validator function
+                        validator: emailValidator,
                       ),
                       SizedBox(height: 30),
                       TextFormField(
@@ -54,6 +52,11 @@ class _SigninPageState extends State<SigninPage> {
                           prefixIcon: Icon(Icons.lock_outline),
                         ),
                         controller: _passController,
+                        validator: (value) {
+                          return (value != null && value.length >= 6)
+                              ? null
+                              : 'La contraseña debe de ser de 6 caracteres';
+                        },
                       ),
                       SizedBox(height: 30),
                       MaterialButton(
@@ -112,6 +115,44 @@ class _SigninPageState extends State<SigninPage> {
           ),
         ),
       ),
+    );
+  }
+}
+
+String? emailValidator(String? fieldContent) {
+  String pattern =
+      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+  RegExp regExp = new RegExp(pattern);
+
+  return regExp.hasMatch(fieldContent ?? '')
+      ? null
+      : 'El valor ingresado no luce como un correo';
+}
+
+String? stringLongValidator(String? fieldContent) =>
+    fieldContent!.isEmpty && fieldContent.length > 6
+        ? 'El campo es obligatorio y longitud mayor a 6'
+        : null;
+
+class LoginField extends StatelessWidget {
+  final String? changedValue;
+  final String? label;
+  final bool? isTextObscured;
+  final String? Function(String?)? validator;
+
+  const LoginField({
+    Key? key,
+    this.changedValue,
+    this.label,
+    this.isTextObscured,
+    this.validator,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      decoration: InputDecoration(labelText: label),
+      validator: validator,
     );
   }
 }

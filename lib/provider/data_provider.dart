@@ -9,37 +9,44 @@ class DataProvider {
   static final StreamController<UsuarioModel> _userStreamController =
       new StreamController.broadcast();
 
-  static final StreamController<List<PlatoModel>> _cartStreamController =
+  static final StreamController<int> cartStreamController =
       new StreamController.broadcast();
 
   static final List<PlatoModel> carritoTemporal = [];
 
   /*Carrito*/
 
-  static Stream<List<PlatoModel>> get carroStream =>
-      _cartStreamController.stream.asBroadcastStream();
+  static Stream<int> get carroStream => cartStreamController.stream;
 
   static void agregarItemCarrito(PlatoModel plato) async {
-    print(plato.nombre);
     carritoTemporal.add(plato);
-    _cartStreamController.add(carritoTemporal);
   }
 
   /*Plato*/
   static Stream<List<PlatoModel>> get streamController =>
       _streamController.stream;
 
-  static void obtienePlatosProvider(PlatoModel? platoSelecciondo) async {
-    if (platoSelecciondo != null) {
-      final lista = [platoSelecciondo];
-      _streamController.add(lista);
-      return;
-    } else {
-      final db = new Dbase();
-      final lista = await db.obtienePlatos();
-      _streamController.add(lista);
-      return;
-    }
+  static void obtienePlatosProvider() async {
+    final db = new Dbase();
+    final lista = await db.obtienePlatos();
+    _streamController.add(lista);
+    return;
+  }
+
+  static void obtienePlatoBuscado(PlatoModel platoSelecciondo) async {
+    final lista = [platoSelecciondo];
+    _streamController.add(lista);
+    return;
+  }
+
+  static void obtienecCantidadCarro() {
+    int count = carritoTemporal.length;
+    print('aca $count');
+    cartStreamController.add(count);
+  }
+
+  static void obtienePlatosCarro() async {
+    _streamController.add(carritoTemporal);
   }
 
   static void searchPlatosProvider(String termino) async {
@@ -69,6 +76,6 @@ class DataProvider {
   static dispose() {
     _streamController.close();
     _userStreamController.close();
-    _cartStreamController.close();
+    cartStreamController.close();
   }
 }

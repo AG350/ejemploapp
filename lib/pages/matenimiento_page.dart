@@ -167,7 +167,7 @@ class _MantenimientoPageState extends State<MantenimientoPage> {
                               ? null
                               : this.image?.path.toString();
                           db.modificaPlato(platoEdit);
-                          DataProvider.obtienePlatosProvider(null);
+                          DataProvider.obtienePlatosProvider();
                           Navigator.pop(context);
                           return;
                         }
@@ -179,7 +179,7 @@ class _MantenimientoPageState extends State<MantenimientoPage> {
                           imagen: this.image?.path.toString() ?? null,
                         );
                         db.agregaPlato(platoNuevo);
-                        DataProvider.obtienePlatosProvider(null);
+                        DataProvider.obtienePlatosProvider();
                         Navigator.pop(context);
                       } else {
                         SnackBar snackBar =

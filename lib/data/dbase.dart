@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -72,8 +71,7 @@ class Dbase {
           where: 'id = ?', whereArgs: [plato.id]);
     } catch (errorsql) {
       print(errorsql.toString());
-    } finally {}
-    print('bd response: $res, ${plato.id}');
+    }
     return res;
   }
 

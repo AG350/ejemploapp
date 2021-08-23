@@ -18,7 +18,6 @@ class SearchPlato extends SearchDelegate {
       ),
     ];
   }
-  
 
   @override
   Widget buildLeading(BuildContext context) {
@@ -69,7 +68,7 @@ class SearchPlato extends SearchDelegate {
           title: Text(plato.nombre),
           subtitle: Text('${plato.precio}'),
           onTap: () {
-            DataProvider.obtienePlatosProvider(plato);
+            DataProvider.obtienePlatoBuscado(plato);
             this.close(context, plato);
           },
         );

@@ -21,8 +21,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: {
         'home': (_) => HomePage(),
-        'home_alt': (_) => HomePageAlternative(),
-        'home_slide': (_) => HomePageSlide(),
         'mantenimiento': (_) => MantenimientoPage(),
         'signin': (_) => SigninPage(),
         'signup': (_) => SignupPage(),
