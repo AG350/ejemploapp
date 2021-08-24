@@ -1,6 +1,7 @@
 import 'package:ejemplo_app/data/dbase.dart';
 import 'package:ejemplo_app/models/models.dart';
 import 'package:ejemplo_app/pages/pages.dart';
+import 'package:ejemplo_app/utils/snack_bar_util.dart';
 import 'package:ejemplo_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -41,7 +42,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
               ),
               SizedBox(height: 50),
-              GoToSignInButton()
+              BottomButton('Ingresar', SignInPage.routeName),
             ],
           ),
         ),
@@ -143,13 +144,10 @@ class SignUpButton extends StatelessWidget {
             db.guardarUsuario(user).then(
               (value) {
                 if (!value) {
-                  SnackBar snackBar =
-                      SnackBar(content: Text('Usuario ya registrado'));
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  Utils.showSnackBar(context, 'Usuario ya registrado');
                   return;
                 }
-                SnackBar snackBar = SnackBar(content: Text('Cuenta creada.'));
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                Utils.showSnackBar(context, 'Cuenta creada');
                 Navigator.pushNamed(context, 'signin');
               },
             );
@@ -158,27 +156,6 @@ class SignUpButton extends StatelessWidget {
           }
         }
       },
-    );
-  }
-}
-
-class GoToSignInButton extends StatelessWidget {
-  const GoToSignInButton({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialButton(
-      onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
-          SignInPage.routeName, (Route<dynamic> route) => false),
-      child: Text('Ingresar', style: TextStyle(color: Colors.blue)),
-      textColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        side:
-            BorderSide(color: Colors.blue, width: 1, style: BorderStyle.solid),
-        borderRadius: BorderRadius.circular(50),
-      ),
     );
   }
 }

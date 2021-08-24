@@ -21,7 +21,7 @@ class SignInPage extends StatelessWidget {
                 child: LoginForm(),
               ),
               SizedBox(height: 50),
-              GoToSignUpButton(),
+              BottomButton('Registrarse', SignUpPage.routeName),
             ],
           ),
         ),
@@ -116,27 +116,6 @@ class SignInButton extends StatelessWidget {
           }
         }
       },
-    );
-  }
-}
-
-class GoToSignUpButton extends StatelessWidget {
-  const GoToSignUpButton({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialButton(
-      onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
-          SignUpPage.routeName, (Route<dynamic> route) => false),
-      child: Text('Crear cuenta', style: TextStyle(color: Colors.blue)),
-      textColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        side:
-            BorderSide(color: Colors.blue, width: 1, style: BorderStyle.solid,),
-        borderRadius: BorderRadius.circular(50),
-      ),
     );
   }
 }

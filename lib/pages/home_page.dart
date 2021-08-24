@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:ejemplo_app/utils/snack_bar_util.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -8,15 +9,24 @@ import 'package:ejemplo_app/data/populate_data.dart';
 import 'package:ejemplo_app/models/models.dart';
 import 'package:ejemplo_app/widgets/widgets.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   static final String routeName = 'home';
   @override
-  _HomePageState createState() => _HomePageState();
+  Widget build(BuildContext context) => Scaffold(
+      appBar: AppBar(title: Text('Platos de comida')),
+      drawer: MenuWidget(),
+      body: Body(),
+      floatingActionButton: FloatingNewPlato(),
+      bottomNavigationBar: BottomNavigationCustom());
 }
 
-class _HomePageState extends State<HomePage> {
-  Stream<List<PlatoModel>> _platoStream = DataProvider.streamController;
-  List<PlatoModel> _carro = DataProvider.carritoTemporal;
+class Body extends StatefulWidget {
+  @override
+  _BodyState createState() => _BodyState();
+}
+
+class _BodyState extends State<Body> {
+  Stream<List<PlatoModel>> platoStream = DataProvider.streamController;
   @override
   void initState() {
     DataProvider.obtienePlatosProvider();
@@ -25,18 +35,9 @@ class _HomePageState extends State<HomePage> {
 
   List<PlatoModel> items = List.of(platos);
   @override
-  Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(title: Text('Platos de comida')),
-      drawer: MenuWidget(),
-      body: _bodyBuilder(),
-      floatingActionButton: FloatingNewPlato(),
-      bottomNavigationBar: BottomNavigationCustom(
-        carro: _carro,
-      ));
-
-  StreamBuilder<List<PlatoModel>> _bodyBuilder() {
+  Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: _platoStream,
+      stream: platoStream,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
           final List<PlatoModel> items = snapshot.data;
@@ -44,76 +45,7 @@ class _HomePageState extends State<HomePage> {
             itemCount: items.length,
             itemBuilder: (BuildContext context, int index) {
               final item = items[index];
-              return Dismissible(
-                dragStartBehavior: DragStartBehavior.down,
-                key: Key('${item.codigo}-prodDis'),
-                background: Container(
-                    decoration: itemBackgroundDecoration(),
-                    padding: EdgeInsets.all(20),
-                    margin: EdgeInsets.symmetric(horizontal: 15),
-                    child: ItemOptionsIcons()),
-                onDismissed: (direction) {
-                  if (direction == DismissDirection.startToEnd) {
-                    DataProvider.eliminarPlatoPorId(item.id!);
-                  } else {
-                    Navigator.pushNamed(context, 'mantenimiento',
-                        arguments: item);
-                  }
-                },
-                confirmDismiss: (direction) {
-                  if (direction == DismissDirection.startToEnd) {
-                    return showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Text('Eliminar plato del listado'),
-                        content: Text(
-                          'Confirma la eliminacion?',
-                        ),
-                        actions: <Widget>[
-                          TextButton(
-                            child: Text('No'),
-                            onPressed: () {
-                              Navigator.of(context).pop(false);
-                            },
-                          ),
-                          TextButton(
-                            child: Text('Si'),
-                            onPressed: () {
-                              Navigator.of(context).pop(true);
-                            },
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-                  return showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text('Editar plato'),
-                      content: Text(
-                        'Desea editar este plato?',
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          child: Text('No'),
-                          onPressed: () {
-                            Navigator.of(context).pop(false);
-                          },
-                        ),
-                        TextButton(
-                          child: Text('Si'),
-                          onPressed: () {
-                            Navigator.of(context).pop(false);
-                            Navigator.pushNamed(context, 'mantenimiento',
-                                arguments: item);
-                          },
-                        ),
-                      ],
-                    ),
-                  );
-                },
-                child: platoTile(item),
-              );
+              return DismissItem(item);
             },
           );
         }
@@ -126,14 +58,84 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
+}
 
-  BoxDecoration itemBackgroundDecoration() {
-    return BoxDecoration(
-      gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [Colors.red, Colors.green],
-          stops: [0.5, 0.5]),
+class DismissItem extends StatelessWidget {
+  const DismissItem(this.item);
+
+  final PlatoModel item;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dismissible(
+      dragStartBehavior: DragStartBehavior.down,
+      key: Key('${item.codigo}-prodDis'),
+      background: Container(
+        decoration: itemBackgroundDecoration(),
+        padding: EdgeInsets.all(20),
+        margin: EdgeInsets.symmetric(horizontal: 15),
+        child: ItemOptionsIcons(),
+      ),
+      onDismissed: (direction) {
+        if (direction == DismissDirection.startToEnd) {
+          DataProvider.eliminarPlatoPorId(item.id!);
+        } else
+          Navigator.pushNamed(context, 'mantenimiento', arguments: item);
+      },
+      confirmDismiss: (direction) {
+        if (direction == DismissDirection.startToEnd) {
+          return showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Eliminar plato del listado'),
+              content: Text(
+                'Confirma la eliminacion?',
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('No'),
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                ),
+                TextButton(
+                  child: Text('Si'),
+                  onPressed: () {
+                    Utils.showSnackBar(context, 'Borrado');
+                    Navigator.of(context).pop(true);
+                  },
+                ),
+              ],
+            ),
+          );
+        }
+        return showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Editar plato'),
+            content: Text(
+              'Desea editar este plato?',
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('No'),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+              ),
+              TextButton(
+                child: Text('Si'),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                  Navigator.pushNamed(context, 'mantenimiento',
+                      arguments: item);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+      child: platoTile(item),
     );
   }
 
@@ -204,10 +206,8 @@ class _HomePageState extends State<HomePage> {
           TextButton(
             child: Text('Ordenar'),
             onPressed: () {
-              setState(() {
-                DataProvider.agregarItemCarrito(plato);
-                DataProvider.obtienePlatosProvider();
-              });
+              DataProvider.agregarItemCarrito(plato);
+              DataProvider.obtienePlatosProvider();
               Navigator.of(context).pop(true);
             },
           ),
@@ -222,6 +222,16 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+}
+
+BoxDecoration itemBackgroundDecoration() {
+  return BoxDecoration(
+    gradient: LinearGradient(
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+        colors: [Colors.red, Colors.green],
+        stops: [0.5, 0.5]),
+  );
 }
 
 class ItemOptionsIcons extends StatelessWidget {

@@ -9,17 +9,26 @@ class DataProvider {
   static final StreamController<UsuarioModel> _userStreamController =
       new StreamController.broadcast();
 
-  static final StreamController<int> cartStreamController =
+  static StreamController<int> _streamControllerInt =
       new StreamController.broadcast();
 
-  static final List<PlatoModel> carritoTemporal = [];
+  static List<PlatoModel> carritoTemporal = [];
+  static int count = 0;
 
   /*Carrito*/
 
-  static Stream<int> get carroStream => cartStreamController.stream;
+  static Stream<int> get carroStream => _streamControllerInt.stream;
 
   static void agregarItemCarrito(PlatoModel plato) async {
+    count++;
     carritoTemporal.add(plato);
+    _streamControllerInt.add(count);
+  }
+
+  static void quitarItemCarrito(PlatoModel plato) async {
+    count--;
+    carritoTemporal.remove(plato);
+    _streamControllerInt.add(count);
   }
 
   /*Plato*/
@@ -39,13 +48,7 @@ class DataProvider {
     return;
   }
 
-  static void obtienecCantidadCarro() {
-    int count = carritoTemporal.length;
-    print('aca $count');
-    cartStreamController.add(count);
-  }
-
-  static void obtienePlatosCarro() async {
+  static void obtienePlatosCarro() {
     _streamController.add(carritoTemporal);
   }
 
@@ -76,6 +79,6 @@ class DataProvider {
   static dispose() {
     _streamController.close();
     _userStreamController.close();
-    cartStreamController.close();
+    _streamControllerInt.close();
   }
 }

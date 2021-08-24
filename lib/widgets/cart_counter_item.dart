@@ -1,10 +1,25 @@
+import 'dart:async';
+
 import 'package:ejemplo_app/models/models.dart';
+import 'package:ejemplo_app/provider/data_provider.dart';
 import 'package:flutter/material.dart';
 
-class CartCounterItem extends StatelessWidget {
-  const CartCounterItem(this._carro);
+class CartCounterItem extends StatefulWidget {
+  @override
+  _CartCounterItemState createState() => _CartCounterItemState();
+}
 
-  final List<PlatoModel> _carro;
+class _CartCounterItemState extends State<CartCounterItem> {
+  int cartLen = DataProvider.count;
+  @override
+  void initState() {
+    DataProvider.carroStream.listen((count) {
+      setState(() {
+        cartLen = count;
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +27,7 @@ class CartCounterItem extends StatelessWidget {
       alignment: Alignment.topCenter,
       children: <Widget>[
         Icon(Icons.shopping_cart),
-        if (_carro.length > 0)
+        if (cartLen > 0)
           Padding(
             padding: const EdgeInsets.only(left: 2.0),
             child: CircleAvatar(
@@ -20,7 +35,7 @@ class CartCounterItem extends StatelessWidget {
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
               child: Text(
-                '${_carro.length}',
+                '$cartLen',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 12.0,

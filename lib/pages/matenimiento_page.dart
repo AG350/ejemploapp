@@ -111,7 +111,7 @@ class _MantenimientoPageState extends State<MantenimientoPage> {
                           children: [
                             IconButton(
                               tooltip: 'Galeria',
-                              onPressed: ()  {
+                              onPressed: () {
                                 _getFrom('galeria').then((imageFromSource) {
                                   setState(() {
                                     this.image = File(imageFromSource!.path);

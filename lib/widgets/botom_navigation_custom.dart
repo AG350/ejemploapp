@@ -6,18 +6,8 @@ import 'package:ejemplo_app/pages/search/search_plato.dart';
 
 // ignore: must_be_immutable
 class BottomNavigationCustom extends StatefulWidget {
-  BottomNavigationCustom({
-    Key? key,
-    required List<PlatoModel> carro,
-    this.platoSeleccionado,
-  })  : _carro = carro,
-        super(key: key);
-  List<PlatoModel> _carro;
-  PlatoModel? platoSeleccionado;
-
   @override
-  _BottomNavigationCustomState createState() =>
-      _BottomNavigationCustomState();
+  _BottomNavigationCustomState createState() => _BottomNavigationCustomState();
 }
 
 class _BottomNavigationCustomState extends State<BottomNavigationCustom> {
@@ -36,7 +26,6 @@ class _BottomNavigationCustomState extends State<BottomNavigationCustom> {
             break;
           case 1:
             if (DataProvider.carritoTemporal.length > 0) {
-              DataProvider.obtienePlatosCarro();
               Navigator.pushNamed(context, 'cart');
             }
             break;
@@ -49,7 +38,6 @@ class _BottomNavigationCustomState extends State<BottomNavigationCustom> {
               setState(
                 () {
                   if (plato != null) {
-                    this.widget.platoSeleccionado = plato;
                     historial.insert(0, plato);
                   }
                 },
@@ -70,7 +58,7 @@ class _BottomNavigationCustomState extends State<BottomNavigationCustom> {
                 label: 'Inicio',
               ),
               BottomNavigationBarItem(
-                icon: CartCounterItem(widget._carro),
+                icon: CartCounterItem(),
                 label: 'Carro',
               ),
               BottomNavigationBarItem(
@@ -84,7 +72,7 @@ class _BottomNavigationCustomState extends State<BottomNavigationCustom> {
                 label: 'Inicio',
               ),
               BottomNavigationBarItem(
-                icon: CartCounterItem(widget._carro),
+                icon: CartCounterItem(),
                 label: 'Carro',
               )
             ],
