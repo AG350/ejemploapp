@@ -48,40 +48,10 @@ class _HomePageState extends State<HomePage> {
                 dragStartBehavior: DragStartBehavior.down,
                 key: Key('${item.codigo}-prodDis'),
                 background: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                          colors: [Colors.red, Colors.green],
-                          stops: [0.5, 0.5]),
-                    ),
+                    decoration: itemBackgroundDecoration(),
                     padding: EdgeInsets.all(20),
                     margin: EdgeInsets.symmetric(horizontal: 15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: IconButton(
-                              icon: Icon(
-                                Icons.delete,
-                                size: 35,
-                              ),
-                              color: Colors.white,
-                              onPressed: () {}),
-                        ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: IconButton(
-                              icon: Icon(
-                                Icons.edit,
-                                size: 35,
-                              ),
-                              color: Colors.white,
-                              onPressed: () {}),
-                        ),
-                      ],
-                    )),
+                    child: ItemOptionsIcons()),
                 onDismissed: (direction) {
                   if (direction == DismissDirection.startToEnd) {
                     DataProvider.eliminarPlatoPorId(item.id!);
@@ -154,6 +124,16 @@ class _HomePageState extends State<HomePage> {
           child: CircularProgressIndicator(),
         );
       },
+    );
+  }
+
+  BoxDecoration itemBackgroundDecoration() {
+    return BoxDecoration(
+      gradient: LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: [Colors.red, Colors.green],
+          stops: [0.5, 0.5]),
     );
   }
 
@@ -240,6 +220,29 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class ItemOptionsIcons extends StatelessWidget {
+  const ItemOptionsIcons({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Icon(Icons.delete, color: Colors.white),
+        ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Icon(Icons.edit, color: Colors.white),
+        ),
+      ],
     );
   }
 }

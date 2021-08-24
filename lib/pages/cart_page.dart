@@ -5,6 +5,7 @@ import 'package:ejemplo_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class CartPage extends StatelessWidget {
+  static final String routeName = 'cart';
   final List<PlatoModel> _carro = DataProvider.carritoTemporal;
 
   @override

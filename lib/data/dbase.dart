@@ -147,8 +147,7 @@ class Dbase {
   Future<bool> guardarUsuario(UsuarioModel usuario) async {
     final _usuario = await obtenerUsuario(usuario.email, usuario.password);
     if (_usuario.email != '') {
-      final res = await modificarUsuario(usuario);
-      if (res > 0) return true;
+      return false;
     } else {
       final res = await agregarUsuario(usuario);
       if (res > 0) return true;

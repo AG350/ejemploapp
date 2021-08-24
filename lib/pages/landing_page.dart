@@ -10,7 +10,7 @@ class LandingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     print(prefs.nombreUsuario);
     if (prefs.nombreUsuario == '') {
-      return SigninPage();
+      return SignInPage();
     }
     return HomePage();
   }

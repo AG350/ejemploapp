@@ -14,34 +14,15 @@ class MenuWidget extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          DrawerHeader(
-            child: Container(
-              alignment: Alignment.bottomLeft,
-              height: 300,
-              width: double.infinity,
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    child: Icon(Icons.person),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'Hola ${prefs.nombreUsuario}',
-                    style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).accentColor),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          Header(prefs: prefs),
           ListTile(
               leading: Icon(Icons.home, color: Colors.blue),
               title: Text('Home'),
               onTap: () => Navigator.pushNamed(context, HomePage.routeName)),
+          ListTile(
+              leading: Icon(Icons.shopping_cart, color: Colors.blue),
+              title: Text('Carro de compras'),
+              onTap: () => Navigator.pushReplacementNamed(context, 'cart')),
           ListTile(
               leading: Icon(Icons.add_box_sharp, color: Colors.blue),
               title: Text('Cargar productos para prueba'),
@@ -49,22 +30,55 @@ class MenuWidget extends StatelessWidget {
                 platos.forEach((element) {
                   Dbase().agregaPlato(element);
                 });
-                Navigator.pushReplacementNamed(
-                    context, HomePage.routeName);
+                Navigator.pushReplacementNamed(context, HomePage.routeName);
               }),
           ListTile(
-              leading: Icon(Icons.settings, color: Colors.blue),
-              title: Text('Carro de compras'),
-              onTap: () => Navigator.pushReplacementNamed(context, 'cart')),
-          ListTile(
-            leading: Icon(Icons.settings, color: Colors.blue),
+            leading: Icon(Icons.exit_to_app, color: Colors.blue),
             title: Text('Cerrar sesión'),
             onTap: () {
               prefs.logOut();
-              Navigator.pushReplacementNamed(context, LandingPage.routeName);
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  LandingPage.routeName, (Route<dynamic> route) => false);
             },
           ),
         ],
+      ),
+    );
+  }
+}
+
+class Header extends StatelessWidget {
+  const Header({
+    Key? key,
+    required this.prefs,
+  }) : super(key: key);
+
+  final PreferenciasUsuario prefs;
+
+  @override
+  Widget build(BuildContext context) {
+    return DrawerHeader(
+      child: Container(
+        alignment: Alignment.bottomLeft,
+        height: 300,
+        width: double.infinity,
+        child: Row(
+          children: [
+            CircleAvatar(
+              child: Icon(Icons.person),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              'Hola ${prefs.nombreUsuario}',
+              style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).accentColor),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -22,8 +22,8 @@ class MyApp extends StatelessWidget {
       routes: {
         'home': (_) => HomePage(),
         'mantenimiento': (_) => MantenimientoPage(),
-        'signin': (_) => SigninPage(),
-        'signup': (_) => SignupPage(),
+        'signin': (_) => SignInPage(),
+        'signup': (_) => SignUpPage(),
         'landing': (_) => LandingPage(),
         'cart': (_) => CartPage(),
       },

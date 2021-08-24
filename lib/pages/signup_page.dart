@@ -1,13 +1,16 @@
 import 'package:ejemplo_app/data/dbase.dart';
 import 'package:ejemplo_app/models/models.dart';
+import 'package:ejemplo_app/pages/pages.dart';
+import 'package:ejemplo_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
-class SignupPage extends StatefulWidget {
+class SignUpPage extends StatefulWidget {
+  static final String routeName = 'signup';
   @override
-  _SignupPageState createState() => _SignupPageState();
+  _SignUpPageState createState() => _SignUpPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _SignUpPageState extends State<SignUpPage> {
   final db = new Dbase();
   final _emailController = new TextEditingController();
   final _passController = new TextEditingController();
@@ -31,94 +34,150 @@ class _SignupPageState extends State<SignupPage> {
           child: Column(
             children: [
               Container(
-                child: Form(
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        autocorrect: false,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration(
-                          hintText: 'john.doe@gmail.com',
-                          labelText: 'Correo electrónico',
-                          prefixIcon: Icon(Icons.alternate_email_rounded),
-                        ),
-                        controller: _emailController,
-                      ),
-                      SizedBox(height: 30),
-                      TextFormField(
-                        autocorrect: false,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration(
-                          hintText: 'Nombre del usuario',
-                          labelText: 'Nombre',
-                          prefixIcon: Icon(Icons.alternate_email_rounded),
-                        ),
-                        controller: _nameController,
-                      ),
-                      SizedBox(height: 30),
-                      TextFormField(
-                        autocorrect: false,
-                        obscureText: true,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration(
-                          hintText: '*****',
-                          labelText: 'Contraseña',
-                          prefixIcon: Icon(Icons.lock_outline),
-                        ),
-                        controller: _passController,
-                      ),
-                      SizedBox(height: 30),
-                      MaterialButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        disabledColor: Colors.grey,
-                        elevation: 0,
-                        color: Colors.deepPurple,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 80, vertical: 15),
-                          child: Text(
-                            'Registrarse',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                        onPressed: () async {
-                          try {
-                            final user = new UsuarioModel(
-                              email: _emailController.text,
-                              nombre: _nameController.text,
-                              password: _passController.text,
-                            );
-                            print(db.guardarUsuario(user));
-                            SnackBar snackBar =
-                                SnackBar(content: Text('Cuenta creada.'));
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                            Navigator.pushNamed(context, 'signin');
-                          } catch (e) {
-                            print('Error en crear: $e');
-                          }
-                        },
-                      ),
-                    ],
-                  ),
+                child: SignUpForm(
+                  _emailController,
+                  _nameController,
+                  _passController,
                 ),
               ),
               SizedBox(height: 50),
-              MaterialButton(
-                onPressed: () => Navigator.pushNamed(context, 'signin'),
-                child: Text('Ingresar', style: TextStyle(color: Colors.blue)),
-                textColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(
-                      color: Colors.blue, width: 1, style: BorderStyle.solid),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-              )
+              GoToSignInButton()
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class SignUpForm extends StatelessWidget {
+  final signUpFormGlobalKey = GlobalKey<FormState>();
+  SignUpForm(
+    this.emailController,
+    this.nameController,
+    this.passController,
+  );
+
+  final TextEditingController emailController;
+  final TextEditingController nameController;
+  final TextEditingController passController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: signUpFormGlobalKey,
+      child: Column(
+        children: [
+          CustomFormField(
+            label: 'Correo electronico',
+            validator: emailValidator,
+            controller: emailController,
+            iconData: Icons.alternate_email_rounded,
+          ),
+          SizedBox(height: 30),
+          CustomFormField(
+            label: 'Nombre',
+            validator: stringLongValidator,
+            controller: nameController,
+            iconData: Icons.person_outline_sharp,
+          ),
+          SizedBox(height: 30),
+          CustomFormField(
+            label: 'Contraseña',
+            validator: stringLongValidator,
+            controller: passController,
+            iconData: Icons.lock_outline,
+            isTextObscured: true,
+          ),
+          SizedBox(height: 30),
+          SignUpButton(
+            signUpFormGlobalKey,
+            emailController,
+            nameController,
+            passController,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class SignUpButton extends StatelessWidget {
+  SignUpButton(
+    this.signUpFormGlobalKey,
+    this.emailController,
+    this.nameController,
+    this.passController,
+  );
+
+  final GlobalKey<FormState> signUpFormGlobalKey;
+  final TextEditingController emailController;
+  final TextEditingController nameController;
+  final TextEditingController passController;
+  final db = new Dbase();
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      disabledColor: Colors.grey,
+      elevation: 0,
+      color: Colors.blue,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+        child: Text(
+          'Registrarse',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      onPressed: () {
+        if (signUpFormGlobalKey.currentState?.validate() == true) {
+          try {
+            final user = new UsuarioModel(
+              email: emailController.text,
+              nombre: nameController.text,
+              password: passController.text,
+            );
+            db.guardarUsuario(user).then(
+              (value) {
+                if (!value) {
+                  SnackBar snackBar =
+                      SnackBar(content: Text('Usuario ya registrado'));
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  return;
+                }
+                SnackBar snackBar = SnackBar(content: Text('Cuenta creada.'));
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                Navigator.pushNamed(context, 'signin');
+              },
+            );
+          } catch (e) {
+            print('Error en crear: $e');
+          }
+        }
+      },
+    );
+  }
+}
+
+class GoToSignInButton extends StatelessWidget {
+  const GoToSignInButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+      onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
+          SignInPage.routeName, (Route<dynamic> route) => false),
+      child: Text('Ingresar', style: TextStyle(color: Colors.blue)),
+      textColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        side:
+            BorderSide(color: Colors.blue, width: 1, style: BorderStyle.solid),
+        borderRadius: BorderRadius.circular(50),
       ),
     );
   }
