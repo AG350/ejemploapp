@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:ejemplo_app/data/dbase.dart';
 import 'package:ejemplo_app/models/plato_model.dart';
 import 'package:ejemplo_app/provider/data_provider.dart';
+import 'package:ejemplo_app/utils/snack_bar_util.dart';
+import 'package:ejemplo_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -75,29 +77,26 @@ class _MantenimientoPageState extends State<MantenimientoPage> {
                           image: AssetImage('assets/no-image.png'),
                         ),
                 ),
-                _FormsFields(
-                  textControler: _codigoController,
-                  label: 'Codigo',
-                  tipo: TextInputType.text,
-                ),
+                CustomFormField(
+                    label: 'Codigo',
+                    controller: _codigoController,
+                    iconData: Icons.info),
                 SizedBox(height: 10),
-                _FormsFields(
-                  textControler: _nombreController,
-                  label: 'Nombre',
-                  tipo: TextInputType.name,
-                ),
+                CustomFormField(
+                    label: 'Nombre',
+                    controller: _nombreController,
+                    iconData: Icons.dashboard_outlined),
                 SizedBox(height: 10),
-                _FormsFields(
-                  textControler: _descripcionController,
-                  label: 'Descripcion',
-                  tipo: TextInputType.multiline,
-                ),
+                CustomFormField(
+                    label: 'Descripcion',
+                    controller: _descripcionController,
+                    iconData: Icons.description),
                 SizedBox(height: 10),
-                _FormsFields(
-                  textControler: _precioController,
-                  label: 'Precio',
-                  tipo: TextInputType.number,
-                ),
+                CustomFormField(
+                    label: 'Precio',
+                    controller: _precioController,
+                    iconData: Icons.attach_money,
+                    type: TextInputType.number),
                 SizedBox(height: 40),
                 Text('Seleccionar foto desde...'),
                 Padding(
@@ -114,7 +113,9 @@ class _MantenimientoPageState extends State<MantenimientoPage> {
                               onPressed: () {
                                 _getFrom('galeria').then((imageFromSource) {
                                   setState(() {
-                                    this.image = File(imageFromSource!.path);
+                                    if (imageFromSource != null) {
+                                      this.image = File(imageFromSource.path);
+                                    }
                                   });
                                 });
                               },
@@ -133,7 +134,9 @@ class _MantenimientoPageState extends State<MantenimientoPage> {
                               onPressed: () {
                                 _getFrom('camara').then((imageFromSource) {
                                   setState(() {
-                                    this.image = File(imageFromSource!.path);
+                                    if (imageFromSource != null) {
+                                      this.image = File(imageFromSource.path);
+                                    }
                                   });
                                 });
                               },
@@ -181,11 +184,9 @@ class _MantenimientoPageState extends State<MantenimientoPage> {
                         db.agregaPlato(platoNuevo);
                         DataProvider.obtienePlatosProvider();
                         Navigator.pop(context);
+                        Utils.showSnackBar(context, 'Creacion exitosa');
                       } else {
-                        SnackBar snackBar =
-                            SnackBar(content: Text('Cancelado'));
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
+                        Utils.showSnackBar(context, 'Cancelado');
                         Navigator.pop(context);
                       }
                     },
@@ -198,55 +199,30 @@ class _MantenimientoPageState extends State<MantenimientoPage> {
     );
   }
 
-  Future<XFile?> _getFrom(String opt) async {
-    if (opt == 'camara') {
-      final picker = new ImagePicker();
-      final XFile? pickedFile = await picker.pickImage(
-        source: ImageSource.camera,
-        imageQuality: 100,
-      );
-      if (pickedFile == null) {
-        return null;
-      }
-      return pickedFile;
-    } else {
-      final picker = new ImagePicker();
-      final XFile? pickedFile = await picker.pickImage(
-        source: ImageSource.gallery,
-        imageQuality: 100,
-      );
-      if (pickedFile == null) {
-        return null;
-      }
-      print('path de la foto: ${pickedFile.path.toString()}');
-      return pickedFile;
-    }
-  }
-
   /// Get from camera
 }
 
-class _FormsFields extends StatelessWidget {
-  const _FormsFields({
-    required this.label,
-    required this.textControler,
-    required this.tipo,
-  });
-
-  final TextEditingController textControler;
-  final String label;
-  final TextInputType tipo;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20),
-      child: TextFormField(
-        keyboardType: tipo,
-        decoration: InputDecoration(labelText: label),
-        controller: textControler,
-        cursorColor: Theme.of(context).accentColor,
-      ),
+Future<XFile?> _getFrom(String opt) async {
+  if (opt == 'camara') {
+    final picker = new ImagePicker();
+    final XFile? pickedFile = await picker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 100,
     );
+    if (pickedFile == null) {
+      return null;
+    }
+    return pickedFile;
+  } else {
+    final picker = new ImagePicker();
+    final XFile? pickedFile = await picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 100,
+    );
+    if (pickedFile == null) {
+      return null;
+    }
+    print('path de la foto: ${pickedFile.path.toString()}');
+    return pickedFile;
   }
 }
