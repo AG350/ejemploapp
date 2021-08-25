@@ -20,13 +20,17 @@ class _BottomNavigationCustomState extends State<BottomNavigationCustom> {
     return BottomNavigationBar(
       elevation: 0,
       onTap: (index) async {
+        ///TODO tener cuidado con los   Navigator.pushNamed() que al precionar en una opcion vas acumulando ventanas abiertas
         switch (index) {
           case 0:
-            Navigator.pushNamed(context, 'home');
+
+            ///Podes poner la condicion de que si la pagina actual es la misma a la que queres navegar no realice la accion
+            if (ModalRoute.of(context)?.settings.name != 'home')
+              Navigator.pushReplacementNamed(context, 'home');
             break;
           case 1:
             if (DataProvider.carritoTemporal.length > 0) {
-              Navigator.pushNamed(context, 'cart');
+              Navigator.pushReplacementNamed(context, 'cart');
             }
             break;
           case 2:

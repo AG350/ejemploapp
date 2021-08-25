@@ -67,9 +67,12 @@ class DismissItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(item.codigo);
     return Dismissible(
       dragStartBehavior: DragStartBehavior.down,
-      key: Key('${item.codigo}-prodDis'),
+
+      ///TODO Es mejor dejar que flutter se encargue de generar una key para eliminar el widget de la visual
+      key: GlobalKey(),
       background: Container(
         decoration: itemBackgroundDecoration(),
         padding: EdgeInsets.all(20),

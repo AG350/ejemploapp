@@ -22,6 +22,7 @@ class CartBody extends StatefulWidget {
 }
 
 class _CartBodyState extends State<CartBody> {
+  ///TODO Podrias hacer un stream del carrito temporal para evitar usar un StatefulWidget y en su lugar utilizas un streamBuilder para redibujar la vista
   final List<PlatoModel> carro = DataProvider.carritoTemporal;
 
   @override
@@ -36,7 +37,6 @@ class _CartBodyState extends State<CartBody> {
             elevation: 4.0,
             child: ListTile(
               title: Text(item.nombre),
-              subtitle: null,
               trailing: Icon(Icons.remove_circle, color: Colors.red),
               onTap: () {
                 setState(() {

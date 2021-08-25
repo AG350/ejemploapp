@@ -33,10 +33,22 @@ class _MantenimientoPageState extends State<MantenimientoPage> {
     super.initState();
   }
 
+  ///TODO Siempre poner el dispose para los controller para no generar perdida de memoria
+  @override
+  void dispose() {
+    _codigoController.dispose();
+    _nombreController.dispose();
+    _descripcionController.dispose();
+    _precioController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     try {
       if (noRepetirRender) {
+        ///TODO se puede guardar el plato seleccionado en el provider para evitar pasar informacion entre ventanas con el navigator
+        ///de este modo se tiene mas centralizado la logica
         platoEdit = ModalRoute.of(context)!.settings.arguments as PlatoModel;
         if (platoEdit.codigo.isNotEmpty) {
           setState(() {
@@ -54,6 +66,9 @@ class _MantenimientoPageState extends State<MantenimientoPage> {
         noRepetirRender = false;
       }
     } catch (e) {}
+
+    ///TODO La estructura de widgets esta bien pero es conveniente separar en widgets mas pequeños para que sea mas legible
+    ///ejemplo un widget para el formulario, otro para camara y galeria
     return Scaffold(
       appBar: AppBar(title: Text('Mantenimiento')),
       body: SafeArea(

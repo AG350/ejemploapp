@@ -1,49 +1,40 @@
-import 'dart:async';
-
-import 'package:ejemplo_app/models/models.dart';
-import 'package:ejemplo_app/provider/data_provider.dart';
+///TODO Intentar mantener orden en importaciones de directorios.
+///Primero las propias de dart, despues la de flutter, dependecias de terceros y por ultimo las importaciones de otras clases
 import 'package:flutter/material.dart';
 
-class CartCounterItem extends StatefulWidget {
-  @override
-  _CartCounterItemState createState() => _CartCounterItemState();
-}
+import 'package:ejemplo_app/provider/data_provider.dart';
 
-class _CartCounterItemState extends State<CartCounterItem> {
-  int cartLen = DataProvider.count;
-  @override
-  void initState() {
-    DataProvider.carroStream.listen((count) {
-      setState(() {
-        cartLen = count;
-      });
-    });
-    super.initState();
-  }
-
+///TODO esto no es necesario que sea un statefulWidget con un StatelessWidget y un StreamBuilder podes escuchar los cambios  de
+///carroStream
+class CartCounterItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.topCenter,
-      children: <Widget>[
-        Icon(Icons.shopping_cart),
-        if (cartLen > 0)
-          Padding(
-            padding: const EdgeInsets.only(left: 2.0),
-            child: CircleAvatar(
-              radius: 8.0,
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-              child: Text(
-                '$cartLen',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12.0,
+    return StreamBuilder<int>(
+        initialData: DataProvider.carritoTemporal.length,
+        stream: DataProvider.carroStream,
+        builder: (context, snapshot) {
+          return Stack(
+            alignment: Alignment.topCenter,
+            children: <Widget>[
+              Icon(Icons.shopping_cart),
+              if (snapshot.hasData)
+                Padding(
+                  padding: const EdgeInsets.only(left: 2.0),
+                  child: CircleAvatar(
+                    radius: 8.0,
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    child: Text(
+                      '${snapshot.data ?? ''}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12.0,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
-      ],
-    );
+            ],
+          );
+        });
   }
 }
