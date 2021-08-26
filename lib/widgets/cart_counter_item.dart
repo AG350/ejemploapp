@@ -11,13 +11,13 @@ class CartCounterItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder<int>(
         initialData: DataProvider.carritoTemporal.length,
-        stream: DataProvider.carroStream,
+        stream: DataProvider.cantidadCarroStream,
         builder: (context, snapshot) {
           return Stack(
             alignment: Alignment.topCenter,
             children: <Widget>[
               Icon(Icons.shopping_cart),
-              if (snapshot.hasData)
+              if (snapshot.hasData && snapshot.data != 0)
                 Padding(
                   padding: const EdgeInsets.only(left: 2.0),
                   child: CircleAvatar(

@@ -38,8 +38,10 @@ class SearchPlato extends SearchDelegate {
     return FutureBuilder(
       future: db.leePlatoByTermino(query),
       builder: (_, AsyncSnapshot snapshot) {
-        if (snapshot.hasError) {
-          return ListTile(title: Text('No hay nada con ese término'));
+        if (snapshot.data.isEmpty) {
+          return ListTile(
+              title: Text(
+                  'Su busqueda no genero resultados, intente con otra palabra'));
         }
 
         if (snapshot.hasData) {

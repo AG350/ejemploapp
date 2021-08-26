@@ -1,10 +1,10 @@
 import 'dart:io';
-import 'package:ejemplo_app/utils/snack_bar_util.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:ejemplo_app/provider/data_provider.dart';
 
+import 'package:ejemplo_app/utils/snack_bar_util.dart';
 import 'package:ejemplo_app/data/populate_data.dart';
 import 'package:ejemplo_app/models/models.dart';
 import 'package:ejemplo_app/widgets/widgets.dart';
@@ -67,7 +67,6 @@ class DismissItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(item.codigo);
     return Dismissible(
       dragStartBehavior: DragStartBehavior.down,
 
@@ -130,8 +129,9 @@ class DismissItem extends StatelessWidget {
                 child: Text('Si'),
                 onPressed: () {
                   Navigator.of(context).pop(false);
-                  Navigator.pushNamed(context, 'mantenimiento',
-                      arguments: item);
+                  DataProvider.platoEditar = item;
+                  
+                  Navigator.pushNamed(context, 'mantenimiento');
                 },
               ),
             ],
@@ -238,10 +238,6 @@ BoxDecoration itemBackgroundDecoration() {
 }
 
 class ItemOptionsIcons extends StatelessWidget {
-  const ItemOptionsIcons({
-    Key? key,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Row(
